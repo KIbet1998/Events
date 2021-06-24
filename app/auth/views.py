@@ -8,8 +8,6 @@ from .. import db
 # from ..email import mail_message
 @auth.route('/register',methods = ["GET","POST"])
 def register():
-    if current_user.is_authenticated:
-        return redirect(url_for('.index'))
     form = RegistrationForm()
     if form.validate_on_submit():
         user = User(email = form.email.data, username = form.username.data,password = form.password.data)
@@ -35,3 +33,4 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for("main.index"))
+
