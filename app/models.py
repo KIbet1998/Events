@@ -9,11 +9,9 @@ class User(UserMixin,db.Model):
     id=db.Column(db.Integer,primary_key = True)
     username = db.Column(db.String(255))
     email = db.Column(db.String(255),unique = True,index = True)
-  
     pass_secure = db.Column(db.String(255))
     bio = db.Column(db.String(255))
     profile_pic_path = db.Column(db.String())
-  
     posts = db.relationship('Post', backref='user', lazy='dynamic')
     
     @property
@@ -37,6 +35,11 @@ class Post(db.Model):
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     content = db.Column(db.Text, nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+
+    def save_post(self):
+        db.session.add(self)
+        db.session.commit()
+
     def __repr__(self):
         return f"Post('{self.title}', '{self.date_posted}')"
 

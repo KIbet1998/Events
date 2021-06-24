@@ -1,21 +1,29 @@
-from flask import render_template
+
+from flask import render_template,url_for,flash,redirect,request
 from . import main
 from flask_login import login_user,logout_user,login_required,current_user
 from flask_sqlalchemy import SQLAlchemy
 from .forms import PostForm
 from ..models import Post, User
+from .. import db
 @main.route('/')
 def index():
   posts=Post.query.all()
   heading = 'Working.. Good to go'
-  return render_template('index.html', heading=heading)
+  return render_template('index.html', heading=heading,posts=posts)
+
 
 @main.route('/post/new',methods=['GET','POST'])
 @login_required
 def new_post():
     form =PostForm()
     if form.validate_on_submit():
-        post =Post(title=form.title.data,content=form.content.data,author=current_user)
+        
+        title=form.title.data
+        content=form.content.data
+        user_id=current_user
+        post=Post(title=title,content=content,user_id=current_user._get_current_object().id)
+
         db.session.add(post)
         db.session.commit()
         flash("Your post has been created",'success')

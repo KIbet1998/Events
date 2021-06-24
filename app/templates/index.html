@@ -28,11 +28,21 @@
             {%endif%}
             {% endwith%}
               
+            <div>
+                {% for post in posts %}
+                <div>
+                    <p>{{post.title}}</p>
+                    <p>{{post.content}}</p>
+                    <p>Posted by {{post.user.username}}</p>
+
+                </div>
+                {% endfor %}
+            </div>
           </div>
           <div class="col-md-4">
               <div class="content-section">
                   <h3>Event Categories</h3>
-                  <p class="text-muted">You can put any information you like.</p>
+                  <p class="text-muted">You can view the various categories here.</p>
                   <ul>
                       <li>Art concert</li>
                       <li>Euros 2020</li>
@@ -43,5 +53,6 @@
           </div>
       </div>
   </main>
+
 
 {% endblock%}
