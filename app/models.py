@@ -9,14 +9,13 @@ class User(UserMixin,db.Model):
     id=db.Column(db.Integer,primary_key = True)
     username = db.Column(db.String(255))
     email = db.Column(db.String(255),unique = True,index = True)
-    posts_id = db.Column(db.Integer,db.ForeignKey('posts.id'))
+  
     pass_secure = db.Column(db.String(255))
     bio = db.Column(db.String(255))
     profile_pic_path = db.Column(db.String())
-    password_hash = db.Column(db.String(255))
-    posts = db.relationship('Post', backref='author', lazy=True)
-    comments = db.relationship('Comment', backref='author', lazy=True)
-    liked = db.relationship('PostLike',foreign_keys='PostLike.user_id', backref='user', lazy='dynamic')
+  
+    posts = db.relationship('Post', backref='user', lazy='dynamic')
+    
     @property
     def password(self):
         raise AttributeError('You cannot read the password attribute')
@@ -32,11 +31,12 @@ class User(UserMixin,db.Model):
         return f"User('{self.username}')"
 
 class Post(db.Model):
+    __tablename__='posts'
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     date_posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     content = db.Column(db.Text, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     def __repr__(self):
         return f"Post('{self.title}', '{self.date_posted}')"
 
