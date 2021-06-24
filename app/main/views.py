@@ -1,6 +1,9 @@
 from flask import render_template
 from . import main
-
+from flask_login import login_user,logout_user,login_required,current_user
+from flask_sqlalchemy import SQLAlchemy
+from .forms import PostForm
+from ..models import Post, User
 @main.route('/')
 def index():
   posts=Post.query.all()
@@ -16,5 +19,10 @@ def new_post():
         db.session.add(post)
         db.session.commit()
         flash("Your post has been created",'success')
-        return redirect(url_for('.home'))
+        return redirect(url_for('.index'))
     return render_template('create_post.html',form=form)
+
+@main.route("/post/<int:post_id>")
+def post(post_id):
+    post = Post.query.get_or_404(post_id)
+    return render_template('post.html', title=post.title, post=post)
